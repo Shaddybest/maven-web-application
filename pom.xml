@@ -98,13 +98,13 @@
 	    <repository>
 	      <id>nexus</id>
 	      <name>Landmark Technologies Releases Nexus Repository</name>
-	      <url>http://18.217.128.149:8081/repository/tes-releases/</url>
+	      <url>http://172.31.17.177:8081/repository/tes-releases/</url>
 	    </repository>
 	    
 	    <snapshotRepository>
 	      <id>nexus</id>
 	      <name>Landmark Technologies Snapshot Nexus Repository </name>
-	      <url>http://18.217.128.149:8081/repository/tes-snapshots/</url>
+	      <url>http://172.31.17.177:8081/repository/tes-snapshots/</url>
 	    </snapshotRepository>
 	    
 	</distributionManagement>
