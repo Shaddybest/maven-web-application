@@ -1,0 +1,30 @@
+node{
+    def mavenHome = tool name: 'maven3.9.1'
+  stage('gitcloning'){
+     git credentialsId: 'github-credentials', url: 'https://github.com/Shaddybest/maven-web-application'
+  }
+   stage('mavenBuild'){
+  sh "${mavenHome}/bin/mvn package"}
+  stage('codeQuality'){
+  sh "${mavenHome}/bin/mvn sonar:sonar"
+  }
+  stage('uploadArtifact'){
+      sh "${mavenHome}/bin/mvn deploy"
+  }
+  stage('deploy2UAT'){
+ deploy adapters: [tomcat9(credentialsId: 'main-tomcat', path: '', url: 'http://3.135.189.101:8080/')], contextPath: null, war: 'target/*.war'
+  }
+  stage('manualapproval'){
+      sh "echo 'ready for deployment' "
+      timeout(time:5, unit: 'HOURS') {
+      input message: 'Application ready for deployment,please review and approve'
+      }
+  }
+  stage('deploy2Prod'){
+    deploy adapters: [tomcat9(credentialsId: 'main-tomcat', path: '', url: 'http://3.135.189.101:8080/')], contextPath: null, war: 'target/*.war'
+  }
+  stage('emailNotification'){
+    emailext body: '''Hello, Engineers 
+The build was successful.''', subject: 'Build Status', to: 'shadrackboakye09@gmail.com'  
+  }
+} 
