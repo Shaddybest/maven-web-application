@@ -12,7 +12,7 @@ node{
       sh "${mavenHome}/bin/mvn deploy"
   }
   stage('deploy2UAT'){
- deploy adapters: [tomcat9(credentialsId: 'main-tomcat', path: '', url: 'http://3.135.189.101:8080/')], contextPath: null, war: 'target/*.war'
+ deploy adapters: [tomcat9(credentialsId: 'main-tomcat', path: '', url: 'http://172.31.12.147:8080/')], contextPath: null, war: 'target/*.war'
   }
   stage('manualapproval'){
       sh "echo 'ready for deployment' "
@@ -21,7 +21,7 @@ node{
       }
   }
   stage('deploy2Prod'){
-    deploy adapters: [tomcat9(credentialsId: 'main-tomcat', path: '', url: 'http://3.135.189.101:8080/')], contextPath: null, war: 'target/*.war'
+    deploy adapters: [tomcat9(credentialsId: 'main-tomcat', path: '', url: 'http://172.31.12.147:8080/')], contextPath: null, war: 'target/*.war'
   }
   stage('emailNotification'){
     emailext body: '''Hello, Engineers 
