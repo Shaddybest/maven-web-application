@@ -1,0 +1,56 @@
+//Declarative Pipeline
+pipeline{
+    agent{
+        label 'build'
+    }
+    tools{
+        maven 'maven3.9.1'
+    }
+    //options{}
+    //triggers{}
+    stages{
+        stage('gitcloning'){
+            steps{
+                sh "echo 'cloning the lates application version' "
+                git "https://github.com/Shaddybest/maven-web-application"
+                sh "echo 'latest application version available' "
+            }
+        }
+        stage('TestandBuild'){
+            steps{
+                sh "echo 'sunning JUnits testing' "
+                sh "echo 'testing must pass to create artifact' "
+                sh "mvn package"
+            }
+        }
+        stage('codeQuality'){
+            steps{
+                sh "echo 'testing code quality' "
+                sh "echo 'code quality running' "
+                sh "mvn sonar:sonar"
+            }
+        }
+       stage('Upload2Nexus'){
+            steps{
+                sh "echo 'configure nexus authentication' "
+                //sh "mvn deploy"
+            }
+        }
+        stage('deployArtifact'){
+            steps{
+            deploy adapters: [tomcat9(credentialsId: 'main-tomcat', path: '', url: 'http://18.218.109.159:8080/')], contextPath: null, war: 'target/*.war'
+            }
+        }
+    }
+    post{
+        always{
+            emailext body: 'Great job team, build was successful', subject: 'Bild success', to: 'shadrackboakye09@gmail.com'
+        }
+        success{
+            emailext body: 'Great job team, build was successful', subject: 'Bild success', to: 'shadrackboakye09@gmail.com'
+        }
+        failure{
+            emailext body: 'Hi Team, review the project', subject: 'Build failed', to: 'shadrackboakye09@gmail.com'
+        }
+    }
+}
